@@ -1,6 +1,6 @@
 import { RegisterForm } from './ui/RegisterForm';
 
-export default function () {
+export default function Register() {
   const title = 'Nueva cuenta'
   
   return (

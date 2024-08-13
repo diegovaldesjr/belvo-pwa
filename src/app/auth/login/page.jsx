@@ -1,6 +1,6 @@
 import { LoginForm } from './ui/LoginForm';
 
-export default function () {
+export default function Login() {
   const title = 'Ingresar'
 
   return (
