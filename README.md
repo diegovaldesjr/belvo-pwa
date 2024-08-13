@@ -14,7 +14,7 @@ Este proyecto es una aplicación web progresiva (PWA) desarrollada con **Next.js
 ### 1. Clona el Repositorio
 
 ```bash
-git clone https://github.com/diegovaldesjr/https://github.com/diegovaldesjr/belvo-pwa.git
+git clone https://github.com/diegovaldesjr/belvo-pwa.git
 cd belvo-pwa
 ```
 
