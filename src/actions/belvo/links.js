@@ -13,8 +13,6 @@ export const getLink = async(name) => {
     "Content-Type": "application/json"
   }
 
-  const HTTP_TIMEOUT = 3000
-
   const body = JSON.stringify({
     "username": "bnk100",
     "password": "full",
@@ -29,7 +27,7 @@ export const getLink = async(name) => {
   }
 
   try {
-    const request = await fetchWithTimeout(url, requestOptions, HTTP_TIMEOUT)
+    const request = await fetchWithTimeout(url, requestOptions)
     const response = await request.json()
     
     if (!response?.id) {

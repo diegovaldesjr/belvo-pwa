@@ -13,15 +13,13 @@ export const getInstitutions = async() => {
     "Content-Type": "application/json"
   }
 
-  const HTTP_TIMEOUT = 3000
-
   const requestOptions = {
     method: 'GET',
     headers: headers
   };
 
   try {
-    const request = await fetchWithTimeout(url, requestOptions, HTTP_TIMEOUT)
+    const request = await fetchWithTimeout(url, requestOptions)
     const response = await request.json()
     
     if (!response?.results) {

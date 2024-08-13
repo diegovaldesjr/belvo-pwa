@@ -15,8 +15,6 @@ export const getAccountsByLink = async(linkId) => {
     "Content-Type": "application/json"
   }
 
-  const HTTP_TIMEOUT = 3000
-
   const requestOptions = {
     method: 'GET',
     headers: headers
@@ -29,7 +27,7 @@ export const getAccountsByLink = async(linkId) => {
   try {
     while (nextPage) {
       
-      const request = await fetchWithTimeout(nextPage, requestOptions, HTTP_TIMEOUT)
+      const request = await fetchWithTimeout(nextPage, requestOptions)
       const data = await request.json()
 
       if (!data.results) {
