@@ -20,8 +20,10 @@ export const AccountsDetail = ({id}) => {
         return
       }
 
-      const {accounts: allAccounts} = await getAccountsByLink(linkId)
-      setAccounts(allAccounts)
+      const response = await getAccountsByLink(linkId)
+      
+      if(response.ok)
+        setAccounts(response.accounts)
 
       setIsLoading(false)
     }

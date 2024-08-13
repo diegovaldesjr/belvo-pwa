@@ -1,19 +1,23 @@
 'use server'
 
+import { fetchWithTimeout } from "@/helpers";
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const getAccountsByLink = async(linkId) => {
   const url = `${process.env.BELVO_BASE_URL}/api/accounts/?link=${linkId}`
-  const username = process.env.BELVO_SECRET_ID;
-  const password = process.env.BELVO_SECRET_PASSWORD;
-  const credentials = btoa(`${username}:${password}`);
+  const username = process.env.BELVO_SECRET_ID
+  const password = process.env.BELVO_SECRET_PASSWORD
+  const credentials = btoa(`${username}:${password}`)
 
   const headers = {
     'Authorization': `Basic ${credentials}`,
     "Content-Type": "application/json"
   }
 
-  var requestOptions = {
+  const HTTP_TIMEOUT = 3000
+
+  const requestOptions = {
     method: 'GET',
     headers: headers
   }
@@ -22,10 +26,10 @@ export const getAccountsByLink = async(linkId) => {
   let nextPage = url
 
   await delay(10000)
-
-  while (nextPage) {
-    try {
-      const request = await fetch(nextPage, requestOptions)
+  try {
+    while (nextPage) {
+      
+      const request = await fetchWithTimeout(nextPage, requestOptions, HTTP_TIMEOUT)
       const data = await request.json()
 
       if (!data.results) {
@@ -34,16 +38,15 @@ export const getAccountsByLink = async(linkId) => {
 
       response = response.concat(data.results)
       nextPage = data.next
-
-    } catch(error) {
-      return {
-        ok: false,
-        message: error
-      }
     }
-  }
-  return {
-    ok: true ,
-    accounts: response
+    return {
+      ok: true ,
+      accounts: response
+    }
+  } catch(error) {
+    return {
+      ok: false,
+      message: error
+    }
   }
 }

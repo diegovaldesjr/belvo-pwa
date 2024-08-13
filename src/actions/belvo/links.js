@@ -1,15 +1,19 @@
 'use server'
 
+import { fetchWithTimeout } from "@/helpers"
+
 export const getLink = async(name) => {
   const url = `${process.env.BELVO_BASE_URL}/api/links/`
-  const username = process.env.BELVO_SECRET_ID;
-  const password = process.env.BELVO_SECRET_PASSWORD;
-  const credentials = btoa(`${username}:${password}`);
+  const username = process.env.BELVO_SECRET_ID
+  const password = process.env.BELVO_SECRET_PASSWORD
+  const credentials = btoa(`${username}:${password}`)
 
   const headers = {
     'Authorization': `Basic ${credentials}`,
     "Content-Type": "application/json"
   }
+
+  const HTTP_TIMEOUT = 3000
 
   const body = JSON.stringify({
     "username": "bnk100",
@@ -18,14 +22,14 @@ export const getLink = async(name) => {
     "access_mode": "recurrent"
   })
 
-  var requestOptions = {
+  const requestOptions = {
     method: 'POST',
     headers: headers,
     body: body
-  };
+  }
 
   try {
-    const request = await fetch(url, requestOptions)
+    const request = await fetchWithTimeout(url, requestOptions, HTTP_TIMEOUT)
     const response = await request.json()
     
     if (!response?.id) {

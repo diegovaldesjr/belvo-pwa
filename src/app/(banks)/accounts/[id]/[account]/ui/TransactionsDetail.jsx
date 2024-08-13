@@ -15,13 +15,14 @@ export const TransactionsDetail = ({id}) => {
   useEffect(() =>{
     async function getTransactions() {
       //Obtener transacciones
-      const {transactions: allTransactions} = await getTransactionsByAccount(linkId, id)
+      const response = await getTransactionsByAccount(linkId, id)
 
-      if (allTransactions.length === 0) {
+      if (!response.ok || response?.transactions?.length === 0) {
         setIsLoading(false)
         return
       }
 
+      const allTransactions = response.transactions
       allTransactions.sort((a, b) => new Date(a.accounting_date) - new Date(b.accounting_date));
       setTransactions(allTransactions)
 

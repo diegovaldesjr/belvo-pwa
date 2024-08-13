@@ -1,17 +1,21 @@
 'use server'
 
+import { fetchWithTimeout } from "@/helpers"
+
 export const getTransactionsByAccount = async(linkId, accountId) => {
   const url = `${process.env.BELVO_BASE_URL}/api/transactions/?link=${linkId}&account=${accountId}`
-  const username = process.env.BELVO_SECRET_ID;
-  const password = process.env.BELVO_SECRET_PASSWORD;
-  const credentials = btoa(`${username}:${password}`);
+  const username = process.env.BELVO_SECRET_ID
+  const password = process.env.BELVO_SECRET_PASSWORD
+  const credentials = btoa(`${username}:${password}`)
 
   const headers = {
     'Authorization': `Basic ${credentials}`,
     "Content-Type": "application/json"
   }
 
-  var requestOptions = {
+  const HTTP_TIMEOUT = 3000
+
+  const requestOptions = {
     method: 'GET',
     headers: headers
   }
@@ -21,7 +25,7 @@ export const getTransactionsByAccount = async(linkId, accountId) => {
 
   while (nextPage) {
     try {
-      const request = await fetch(nextPage, requestOptions)
+      const request = await fetchWithTimeout(nextPage, requestOptions, HTTP_TIMEOUT)
       const data = await request.json()
 
       if (!data.results) {
