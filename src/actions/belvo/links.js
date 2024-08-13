@@ -9,8 +9,9 @@ export const getLink = async(name) => {
   const credentials = btoa(`${username}:${password}`)
 
   const headers = {
+    'accept': 'application/json',
     'Authorization': `Basic ${credentials}`,
-    "Content-Type": "application/json"
+    'Content-Type': 'application/json'
   }
 
   const body = JSON.stringify({
