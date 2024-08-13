@@ -1,6 +1,6 @@
 'use server'
 
-import { fetchWithTimeout } from "@/helpers"
+import { fetchWithRetries } from "@/helpers"
 
 export const getLink = async(name) => {
   const url = `${process.env.BELVO_BASE_URL}/api/links/`
@@ -27,11 +27,10 @@ export const getLink = async(name) => {
   }
 
   try {
-    const request = await fetchWithTimeout(url, requestOptions)
-    const response = await request.json()
+    const response = await fetchWithRetries(url, requestOptions)
     
     if (!response?.id) {
-      throw 'Hubo un problema al obtener link'
+      throw new Error('Hubo un problema al obtener link')
     }
 
     return {
@@ -41,7 +40,7 @@ export const getLink = async(name) => {
   } catch(error) {
     return {
       ok: false,
-      message: error
+      message: error.message || error
     }
   }
 }

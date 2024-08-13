@@ -1,6 +1,6 @@
 'use server'
 
-import { fetchWithTimeout } from "@/helpers";
+import { fetchWithRetries } from "@/helpers";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -26,12 +26,10 @@ export const getAccountsByLink = async(linkId) => {
   await delay(10000)
   try {
     while (nextPage) {
-      
-      const request = await fetchWithTimeout(nextPage, requestOptions)
-      const data = await request.json()
+      const data = await fetchWithRetries(url, requestOptions)
 
       if (!data.results) {
-        throw 'Hubo un problema al obtener cuentas'
+        throw new Error('Hubo un problema al obtener cuentas')
       }
 
       response = response.concat(data.results)
@@ -44,7 +42,7 @@ export const getAccountsByLink = async(linkId) => {
   } catch(error) {
     return {
       ok: false,
-      message: error
+      message: error.message || error
     }
   }
 }

@@ -1,6 +1,6 @@
 'use server'
 
-import { fetchWithTimeout } from "@/helpers"
+import { fetchWithRetries } from "@/helpers"
 
 export const getTransactionsByAccount = async(linkId, accountId) => {
   const url = `${process.env.BELVO_BASE_URL}/api/transactions/?link=${linkId}&account=${accountId}`
@@ -23,20 +23,18 @@ export const getTransactionsByAccount = async(linkId, accountId) => {
 
   while (nextPage) {
     try {
-      const request = await fetchWithTimeout(nextPage, requestOptions)
-      const data = await request.json()
+      const data = await fetchWithRetries(nextPage, requestOptions);
 
       if (!data.results) {
-        throw 'Hubo un problema al obtener cuentas'
+        throw new Error('Hubo un problema al obtener transacciones');
       }
 
       response = response.concat(data.results)
       nextPage = data.next
-
     } catch(error) {
       return {
         ok: false,
-        message: error
+        message: error.message || error
       }
     }
   }

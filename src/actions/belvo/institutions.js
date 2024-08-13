@@ -1,6 +1,6 @@
 'use server'
 
-import { fetchWithTimeout } from "@/helpers"
+import { fetchWithRetries } from "@/helpers"
 
 export const getInstitutions = async() => {
   const url = `${process.env.BELVO_BASE_URL}/api/institutions/`
@@ -19,11 +19,10 @@ export const getInstitutions = async() => {
   };
 
   try {
-    const request = await fetchWithTimeout(url, requestOptions)
-    const response = await request.json()
+    const response = await fetchWithRetries(url, requestOptions)
     
     if (!response?.results) {
-      throw 'Hubo un problema al obtener instituciones'
+      throw new Error('Hubo un problema al obtener instituciones')
     }
 
     return {
@@ -33,7 +32,7 @@ export const getInstitutions = async() => {
   } catch(error) {
     return {
       ok: false,
-      message: error
+      message: error.message || error
     }
   }
 }
